@@ -17,7 +17,7 @@ async function handleSendFriendRequest(req,res) {
         if(friend) {
             return res.status(400).json({message: "The concerned person is already your friend"});
         }
-        
+
         const friend_request = new Request({
             from: from,
             to: to
