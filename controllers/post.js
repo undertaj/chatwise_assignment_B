@@ -3,16 +3,17 @@ const Comment = require("../models/comment");
 const { default: mongoose } = require("mongoose");
 
 async function handleAddComment(req,res) {
-    const postid  = req.query.id;
+    const postid  = req.params.id;
     console.log(postid);
     const post = await Post.findById(postid);
     if(post){
         console.log(req.body.text);
+        console.log(req.session.userId);
         const comment = await Comment.create({
             comment: req.body.text,
             commentedBy: req.session.userId
         });
-        db.posts.update({id: post.id},{$set: {"comments": [...post.comments, comment]}});
+        await Post.findByIdAndUpdate({ _id : postid }, {"comments": [...post.comments, comment]});
         // post.comments.push(comment._id);
         return res.status(201).json({message: "Comment added successfully"});
     }
